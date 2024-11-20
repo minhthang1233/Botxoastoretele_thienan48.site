@@ -1,34 +1,23 @@
 from telethon import TelegramClient, events
-import os
 
-# Lấy thông tin từ biến môi trường
-API_ID = int(os.getenv("API_ID", "your_api_id"))  # Thay "your_api_id" bằng API ID của bạn
-API_HASH = os.getenv("API_HASH", "your_api_hash")  # Thay "your_api_hash" bằng API Hash của bạn
-BOT_TOKEN = os.getenv("BOT_TOKEN", "your_bot_token")  # Thay "your_bot_token" bằng Token của Bot
+# Biến môi trường
+API_ID = int("YOUR_API_ID")
+API_HASH = "YOUR_API_HASH"
+BOT_TOKEN = "YOUR_BOT_TOKEN"
+SOURCE_CHAT_ID = -1001234567890  # Thay bằng ID nhóm cần giám sát
 
-# Khởi tạo bot
-bot = TelegramClient('bot', API_ID, API_HASH).start(bot_token=BOT_TOKEN)
+# Kết nối bot
+client = TelegramClient('bot', API_ID, API_HASH).start(bot_token=BOT_TOKEN)
 
-@bot.on(events.NewMessage)
+@client.on(events.NewMessage(chats=SOURCE_CHAT_ID))
 async def handler(event):
-    try:
-        # Kiểm tra nếu tin nhắn là tin nhắn được chuyển tiếp
-        if event.message.forward:
-            forward_info = event.message.forward
-
-            # Ghi log chi tiết tin nhắn để kiểm tra
-            print("Forward info:", forward_info.to_dict())
-
-            # Kiểm tra xem tin nhắn chuyển tiếp có phải từ "Stories" hay không
-            if forward_info.sender_name == "Stories":
-                await event.delete()  # Xóa tin nhắn
-                print(f"Deleted forwarded story: {event.message.id}")
-            else:
-                print("Not a forwarded story.")
-        else:
-            print("Message is not forwarded.")
-    except Exception as e:
-        print(f"Error: {e}")
+    # Kiểm tra xem tin nhắn có phải là tin nhắn chuyển tiếp không
+    if event.message.forward:
+        # Xóa tin nhắn nếu nó được chuyển tiếp
+        await event.delete()
+        print("Forwarded message deleted.")
+    else:
+        print("Message is not forwarded.")
 
 print("Bot is running...")
-bot.run_until_disconnected()
+client.run_until_disconnected()
