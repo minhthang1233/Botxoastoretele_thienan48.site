@@ -1,4 +1,5 @@
 from telethon import TelegramClient
+import os
 
 # Lấy thông tin từ biến môi trường
 API_ID = int(os.getenv("API_ID"))  # Lấy API_ID từ biến môi trường
