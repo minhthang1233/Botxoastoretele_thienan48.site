@@ -39,16 +39,3 @@ async def handler(event):
 
 print("Bot is running...")
 client.run_until_disconnected()
-        # Kiểm tra xem tin nhắn có phải là tin nhắn chuyển tiếp không
-        if event.message.forward:
-            # Kiểm tra người gửi tin nhắn gốc
-            if event.message.forward.sender_id:
-                await event.delete()
-                print("Forwarded message deleted.")
-        else:
-            print("Message is not forwarded.")
-    else:
-        print(f"Message is not from the monitored group. Message from: {event.chat.id}")
-
-print("Bot is running...")
-client.run_until_disconnected()
