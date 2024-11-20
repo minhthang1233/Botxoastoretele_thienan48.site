@@ -31,7 +31,7 @@ async def handler(event):
     print(f"Received message in group: {event.chat.username if event.chat else 'Unknown Group'}")
     
     # Kiểm tra xem tin nhắn có thuộc nhóm bạn muốn giám sát không
-    if event.chat_id == chat.id:
+    if event.chat.id == chat.id:
         print(f"Message belongs to the monitored group: {SOURCE_CHAT_LINK}")
 
         # Kiểm tra xem tin nhắn có phải là tin nhắn chuyển tiếp không
@@ -42,7 +42,7 @@ async def handler(event):
         else:
             print("Message is not forwarded.")
     else:
-        print(f"Message is not from the monitored group. Message from: {event.chat_id}")
+        print(f"Message is not from the monitored group. Message from: {event.chat.id}")
 
 print("Bot is running...")
 client.run_until_disconnected()
