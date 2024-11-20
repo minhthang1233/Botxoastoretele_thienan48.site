@@ -19,12 +19,17 @@ SOURCE_CHAT_LINK = "nhom1573248"  # Thay bằng username của nhóm (không có
 
 @client.on(events.NewMessage)
 async def handler(event):
+    # Lấy thông tin nhóm từ username (link nhóm)
+    try:
+        chat = await client.get_entity(SOURCE_CHAT_LINK)
+        print(f"Monitoring group ID: {chat.id}")  # In ra ID nhóm
+    except Exception as e:
+        print(f"Error fetching group: {e}")
+        return
+
     # In ra tên nhóm nhận được từ sự kiện
     print(f"Received message in group: {event.chat.username if event.chat else 'Unknown Group'}")
     
-    # Lấy thông tin nhóm từ username (link nhóm)
-    chat = await client.get_entity(SOURCE_CHAT_LINK)
-
     # Kiểm tra xem tin nhắn có thuộc nhóm bạn muốn giám sát không
     if event.chat_id == chat.id:
         print(f"Message belongs to the monitored group: {SOURCE_CHAT_LINK}")
@@ -37,7 +42,7 @@ async def handler(event):
         else:
             print("Message is not forwarded.")
     else:
-        print("Message is not from the monitored group.")
+        print(f"Message is not from the monitored group. Message from: {event.chat_id}")
 
 print("Bot is running...")
 client.run_until_disconnected()
