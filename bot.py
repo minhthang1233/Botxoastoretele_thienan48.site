@@ -1,7 +1,7 @@
 from telethon import TelegramClient
 
 # Lấy thông tin từ biến môi trường
-API_ID = int(os.getenv("API_ID"))  # Lấy API_ID từ biến môi trường
+API_ID = int(os.getenv("API_ID")  # Lấy API_ID từ biến môi trường
 API_HASH = os.getenv("API_HASH")   # Lấy API_HASH từ biến môi trường
 BOT_TOKEN = os.getenv("BOT_TOKEN") # Lấy BOT_TOKEN từ biến môi trường
 
