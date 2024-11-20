@@ -36,8 +36,8 @@ async def handler(event):
 
         # Kiểm tra xem tin nhắn có phải là tin nhắn chuyển tiếp không
         if event.message.forward:
-            # Xóa tin nhắn nếu nó được chuyển tiếp
-            if event.message.forward_from or event.message.forward_from_id:
+            # Kiểm tra người gửi tin nhắn gốc
+            if event.message.forward.sender_id:
                 await event.delete()
                 print("Forwarded message deleted.")
         else:
