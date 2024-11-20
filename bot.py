@@ -1,5 +1,5 @@
-from telethon import TelegramClient
 import os
+from telethon import TelegramClient, events
 
 # Lấy thông tin từ biến môi trường
 API_ID = int(os.getenv("API_ID"))  # Lấy API_ID từ biến môi trường
@@ -11,15 +11,26 @@ if not API_ID or not API_HASH or not BOT_TOKEN:
     print("Please make sure API_ID, API_HASH, and BOT_TOKEN are set in the environment variables.")
     exit()
 
-# Khởi tạo TelegramClient
+# Kết nối bot
 client = TelegramClient('bot', API_ID, API_HASH).start(bot_token=BOT_TOKEN)
 
-async def get_chat_id():
-    # Lấy danh sách các nhóm mà bot đã tham gia
-    async for dialog in client.iter_dialogs():
-        # In ra các nhóm và thông tin liên quan
-        print(f"Group Name: {dialog.name}, Group ID: {dialog.id}")
+# Link nhóm bạn muốn giám sát (username của nhóm)
+SOURCE_CHAT_LINK = "nhom1573248"  # Thay bằng username của nhóm (không có https://t.me/)
 
-# Chạy hàm để lấy ID nhóm
-with client:
-    client.loop.run_until_complete(get_chat_id())
+@client.on(events.NewMessage)
+async def handler(event):
+    # Lấy thông tin nhóm từ username (link nhóm)
+    chat = await client.get_entity(SOURCE_CHAT_LINK)
+
+    # Kiểm tra xem tin nhắn có thuộc nhóm bạn muốn giám sát không
+    if event.chat_id == chat.id:
+        # Kiểm tra xem tin nhắn có phải là tin nhắn chuyển tiếp không
+        if event.message.forward:
+            # Xóa tin nhắn nếu nó được chuyển tiếp
+            await event.delete()
+            print("Forwarded message deleted.")
+        else:
+            print("Message is not forwarded.")
+
+print("Bot is running...")
+client.run_until_disconnected()
